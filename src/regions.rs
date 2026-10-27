@@ -31,9 +31,6 @@ pub const SDK_VERSION: &str = "4.16.0";
 pub const SDK_VERSION_CN: &str = "1.20.0";
 pub const DEVICE_MODEL: &str = "AutumnVN";
 pub const SPARK_THRESHOLD: u64 = 120;
-
-pub const DATA_BASE: &str = "https://raw.githubusercontent.com/AutumnVN/ss-data/refs/heads/main";
-
 pub const REGION_ORDER: [&str; 5] = ["en", "jp", "kr", "tw", "cn"];
 
 pub const REGIONS: [Region; 5] = [
@@ -125,32 +122,32 @@ pub fn normalize_region(value: &str) -> Option<&'static str> {
     })
 }
 
-pub fn banner_url(region: &Region) -> String {
-    format!("{DATA_BASE}/{}/bin/Gacha.json", region.data_path)
+pub fn banner_path(region: &Region) -> String {
+    format!("/{}/bin/Gacha.json", region.data_path)
 }
 
-pub fn storage_url(region: &Region) -> String {
-    format!("{DATA_BASE}/{}/bin/GachaStorage.json", region.data_path)
+pub fn storage_path(region: &Region) -> String {
+    format!("/{}/bin/GachaStorage.json", region.data_path)
 }
 
-pub fn banner_lang_url(region: &Region) -> String {
+pub fn banner_lang_path(region: &Region) -> String {
     format!(
-        "{DATA_BASE}/{}/language/{}/Gacha.json",
+        "/{}/language/{}/Gacha.json",
         region.data_path, region.language
     )
 }
 
-pub fn storage_lang_url(region: &Region) -> String {
+pub fn storage_lang_path(region: &Region) -> String {
     format!(
-        "{DATA_BASE}/{}/language/{}/GachaStorage.json",
+        "/{}/language/{}/GachaStorage.json",
         region.data_path, region.language
     )
 }
 
-pub fn gacha_extra_url() -> String {
-    format!("{DATA_BASE}/gacha.json")
+pub fn gacha_extra_path() -> String {
+    "/gacha.json".to_string()
 }
 
-pub fn item_url() -> String {
-    format!("{DATA_BASE}/item.json")
+pub fn item_path() -> String {
+    "/item.json".to_string()
 }
