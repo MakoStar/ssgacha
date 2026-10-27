@@ -28,7 +28,7 @@ pub struct Region {
 
 pub const CLIENT_VERSION: &str = "727.727.727.7272727";
 pub const SDK_VERSION: &str = "4.16.0";
-pub const SDK_VERSION_CN: &str = "1.16.0";
+pub const SDK_VERSION_CN: &str = "1.20.0";
 pub const DEVICE_MODEL: &str = "AutumnVN";
 pub const SPARK_THRESHOLD: u64 = 120;
 
@@ -86,7 +86,7 @@ pub const REGIONS: [Region; 5] = [
         server_url: "https://nova.stargazer-games.com",
         garble_key: b"N&mfco452ZH5!nE3s&o5uxB57UGPENVo",
         language: "zh_TW",
-        auth_lang: "zh-TW",
+        auth_lang: "zh-Hant",
         pid: "TW-NOVA",
         data_path: "TW",
         sdk_version: SDK_VERSION,

@@ -6,6 +6,7 @@ mod output;
 mod proto;
 mod regions;
 mod sdk;
+mod device;
 
 use std::collections::BTreeSet;
 use std::io::{IsTerminal, Write};
