@@ -14,6 +14,7 @@ use crate::crypto::{
 };
 use crate::proto::{IkeReq, IkeResp};
 use crate::regions::Region;
+use crate::mirror;
 
 pub struct IkeResult {
     pub token: String,
@@ -186,4 +187,23 @@ where
         }
     }
     Err(last_error.unwrap_or_else(|| anyhow!("retry operation failed")))
+}
+
+pub async fn fetch_json_path(
+    client: &reqwest::Client,
+    path: &str,
+    label: &str,
+) -> Result<Value> {
+    let mut last_err = None;
+    for mirror in mirror::candidates() {
+        let url = mirror.build_url(path);
+        match fetch_json(client, &url, label).await {
+            Ok(value) => return Ok(value),
+            Err(err) => {
+                eprintln!("[net] {} failed on {:?}: {}", label, mirror, err);
+                last_err = Some(err);
+            }
+        }
+    }
+    Err(last_err.unwrap_or_else(|| anyhow::anyhow!("all mirrors failed for {label}")))
 }

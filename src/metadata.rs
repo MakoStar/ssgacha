@@ -5,9 +5,10 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::net::fetch_json;
+use crate::net::fetch_json_path;
 use crate::regions::{
-    banner_lang_url, banner_url, gacha_extra_url, item_url, storage_lang_url, storage_url, Region,
+    banner_lang_path, banner_path, gacha_extra_path, item_path, storage_lang_path, storage_path,
+    Region,
 };
 
 #[derive(Clone, Debug)]
@@ -226,12 +227,13 @@ pub struct Metadata {
 
 pub async fn load_metadata(client: &reqwest::Client, region: &Region) -> Result<Metadata> {
     println!("Fetching stelladb data...");
-    let banners_endpoint = banner_url(region);
-    let storages_endpoint = storage_url(region);
-    let banner_lang_endpoint = banner_lang_url(region);
-    let storage_lang_endpoint = storage_lang_url(region);
-    let extra_endpoint = gacha_extra_url();
-    let items_endpoint = item_url();
+    let banners_rel = banner_path(region);
+    let storages_rel = storage_path(region);
+    let banner_lang_rel = banner_lang_path(region);
+    let storage_lang_rel = storage_lang_path(region);
+    let extra_rel = gacha_extra_path();
+    let items_rel = item_path();
+
     let banners_label = format!("{}/bin/Gacha.json", region.data_path);
     let storages_label = format!("{}/bin/GachaStorage.json", region.data_path);
     let banner_lang_label = format!(
@@ -243,12 +245,12 @@ pub async fn load_metadata(client: &reqwest::Client, region: &Region) -> Result<
         region.data_path, region.language
     );
 
-    let banners = fetch_json(client, &banners_endpoint, &banners_label);
-    let storages = fetch_json(client, &storages_endpoint, &storages_label);
-    let banner_lang = fetch_json(client, &banner_lang_endpoint, &banner_lang_label);
-    let storage_lang = fetch_json(client, &storage_lang_endpoint, &storage_lang_label);
-    let extra = fetch_json(client, &extra_endpoint, "gacha.json");
-    let items = fetch_json(client, &items_endpoint, "item.json");
+    let banners = fetch_json_path(client, &banners_rel, &banners_label);
+    let storages = fetch_json_path(client, &storages_rel, &storages_label);
+    let banner_lang = fetch_json_path(client, &banner_lang_rel, &banner_lang_label);
+    let storage_lang = fetch_json_path(client, &storage_lang_rel, &storage_lang_label);
+    let extra = fetch_json_path(client, &extra_rel, "gacha.json");
+    let items = fetch_json_path(client, &items_rel, "item.json");
 
     let (raw_banners, raw_storages, banner_lang, storage_lang, extra_banners, item_data) =
         tokio::try_join!(banners, storages, banner_lang, storage_lang, extra, items)?;

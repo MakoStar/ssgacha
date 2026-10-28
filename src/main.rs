@@ -6,6 +6,8 @@ mod output;
 mod proto;
 mod regions;
 mod sdk;
+mod device;
+mod mirror;
 
 use std::collections::BTreeSet;
 use std::io::{IsTerminal, Write};
@@ -205,6 +207,8 @@ async fn run() -> Result<()> {
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(30))
         .build()?;
+
+    mirror::init(&client).await;
 
     let detected: Vec<&Region> = REGION_ORDER
         .iter()
