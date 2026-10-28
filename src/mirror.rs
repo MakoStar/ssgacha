@@ -3,6 +3,7 @@ use std::time::Duration;
 
 const REPO: &str = "AutumnVN/ss-data";
 const RAW_BASE: &str = "https://raw.githubusercontent.com/AutumnVN/ss-data/refs/heads/main";
+pub const RAW_GEN_CN: &str = "https://raw.githubusercontent.com/MakoStar/ss-gendb/refs/heads/main/generated_data";
 
 #[derive(Clone, Copy, Debug)]
 pub enum Mirror {
@@ -13,6 +14,13 @@ pub enum Mirror {
 
 impl Mirror {
     pub fn build_url(&self, path: &str) -> String {
+        if path.starts_with("http://") || path.starts_with("https://") {
+            return match self {
+                Mirror::Raw | Mirror::JsDelivr(_) => path.to_string(),
+                Mirror::Proxy(proxy) => format!("{proxy}{path}"),
+            };
+        }
+
         let path = if path.starts_with('/') {
             path.to_string()
         } else {

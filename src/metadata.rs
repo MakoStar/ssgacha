@@ -5,6 +5,7 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use serde::Serialize;
 use serde_json::Value;
 
+use crate::mirror::RAW_GEN_CN;
 use crate::net::fetch_json_path;
 use crate::regions::{
     banner_lang_path, banner_path, gacha_extra_path, item_path, storage_lang_path, storage_path,
@@ -231,8 +232,6 @@ pub async fn load_metadata(client: &reqwest::Client, region: &Region) -> Result<
     let storages_rel = storage_path(region);
     let banner_lang_rel = banner_lang_path(region);
     let storage_lang_rel = storage_lang_path(region);
-    let extra_rel = gacha_extra_path();
-    let items_rel = item_path();
 
     let banners_label = format!("{}/bin/Gacha.json", region.data_path);
     let storages_label = format!("{}/bin/GachaStorage.json", region.data_path);
@@ -244,6 +243,10 @@ pub async fn load_metadata(client: &reqwest::Client, region: &Region) -> Result<
         "{}/language/{}/GachaStorage.json",
         region.data_path, region.language
     );
+
+    let prefix = if region.key == "cn" { RAW_GEN_CN } else { "" };
+    let extra_rel = format!("{}{}", prefix, gacha_extra_path());
+    let items_rel = format!("{}{}", prefix, item_path());
 
     let banners = fetch_json_path(client, &banners_rel, &banners_label);
     let storages = fetch_json_path(client, &storages_rel, &storages_label);
